@@ -156,20 +156,6 @@ Vagrant.configure("2") do |config|
         config.vm.provision :shell, :inline => "mv /tmp/vagrantfile-user-data /var/lib/coreos-vagrant/", :privileged => true
       end
 
-      #logger = Vagrant::Logger.new(STDOUT)
-      if !ENV["USERPROFILE"].nil? && File.exist?(INSECURE_KEY_PATH)
-        p "copying insecure SSH key from #{INSECURE_KEY_PATH}"
-	#logger.info("Copying insecure SSH key from #{INSECURE_KEY_PATH}")
-        config.vm.provision :file, :source => "#{INSECURE_KEY_PATH}", :destination => "~core/.ssh/insecure_private_key"
-	config.vm.provision :shell, :inline => "chown core ~core/.ssh/insecure_private_key; chmod 600 ~core/.ssh/insecure_private_key"
-      end
-
-      if File.exist?(SSHAGENT_CONFIG_PATH)
-  	config.vm.provision :file, :source => "#{SSHAGENT_CONFIG_PATH}", :destination => "/tmp/vagrantfile-ssh_agent_bashrc"
-  	config.vm.provision :shell, :inline => "mv /tmp/vagrantfile-ssh_agent_bashrc /var/lib/coreos-vagrant/", :privileged => true
-	config.vm.provision :shell, :inline => "[ -L ~core/.bashrc.orig ] || mv ~core/.bashrc ~core/.bashrc.orig; cp /usr/share/skel/.bashrc ~core/.bashrc; echo '[ -r /var/lib/coreos-vagrant/vagrantfile-ssh_agent_bashrc ] && . /var/lib/coreos-vagrant/vagrantfile-ssh_agent_bashrc' >> ~core/.bashrc", :privileged => true
-      end
-  
 
     end # (1..$num_instances).each do |i|
   end
