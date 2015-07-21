@@ -1,3 +1,9 @@
+# CoreOS Vagrant with automatic upload of SSH keys
+
+This repo is a clone of https://github.com/coreos/coreos-vagrant/ with the purpose to add an automatic upload of the (insecure) SSH keys, so fleetctl can be run on each CoreOS node.
+
+The rest of this readme is the original, cloned one:
+
 # CoreOS Vagrant
 
 This repo provides a template Vagrantfile to create a CoreOS virtual machine using the VirtualBox software hypervisor.
