@@ -2,7 +2,7 @@
 
 This repo is a clone of https://github.com/coreos/coreos-vagrant/ with the purpose to add an automatic upload of the (insecure) SSH keys, so fleetctl can be run on each CoreOS node.
 
-The rest of this readme is the original, cloned one:
+Original README from https://github.com/coreos/coreos-vagrant/:
 
 # CoreOS Vagrant
 
