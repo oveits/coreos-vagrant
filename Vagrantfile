@@ -47,11 +47,13 @@ def vm_cpus
 end
 
 Vagrant.configure("2") do |config|
-  # add HTTP proxy configuration
+  # add HTTP proxy configuration (uncomment, if you have installed the vagrant proxy plugin; 
+  # note that the vagrant proxy plugin must be fixed as described on https://github.com/tmatilai/vagrant-proxyconf/issues/123, 
+  # i.e. you need to replace "tmp" by "tmp_file" in $USERPROFILE/.vagrant.d/gems/gems/vagrant-proxyconf-1.5.0/lib/vagrant-proxyconf/cap/coreos/docker_proxy_conf.rb
   if Vagrant.has_plugin?("vagrant-proxyconf")
-    config.proxy.http     = "http://172.28.12.5:8080/"
+    config.proxy.http     = "http://proxy.example.com:8080/"
     #config.proxy.http     = ""
-    config.proxy.https    = "http://172.28.12.5:8080/"
+    config.proxy.https    = "http://proxy.example.com:8080/"
     #config.proxy.https    = ""
     config.proxy.no_proxy = "localhost,127.0.0.1,.example.com"
   end
