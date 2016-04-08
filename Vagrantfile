@@ -15,11 +15,13 @@ $num_instances = 1
 $instance_name_prefix = "core"
 $update_channel = "alpha"
 $image_version = "current"
+#$image_version = "845.0.0"
+#$image_version = "717.3.0"
 $enable_serial_logging = false
 $share_home = false
 $vm_gui = false
-$vm_memory = 1024
-$vm_cpus = 1
+$vm_memory = 1536
+$vm_cpus = 2
 $shared_folders = {}
 $forwarded_ports = {}
 
@@ -46,13 +48,28 @@ def vm_cpus
   $vb_cpus.nil? ? $vm_cpus : $vb_cpus
 end
 
+enable_proxy = !(ENV['HTTP_PROXY'] || ENV['http_proxy'] || '').empty?
+#if enable_proxy
+#  required_plugins.push('vagrant-proxyconf')
+#end
+
+if enable_proxy
+  HTTP_PROXY = ENV['HTTP_PROXY'] || ENV['http_proxy']
+  HTTPS_PROXY = ENV['HTTPS_PROXY'] || ENV['https_proxy']
+  NO_PROXY = ENV['NO_PROXY'] || ENV['no_proxy'] || "localhost"
+else
+  HTTP_PROXY = ""
+  HTTPS_PROXY = ""
+  NO_PROXY = "localhost"
+end
+
 Vagrant.configure("2") do |config|
   # adapt the proxy URL and uncomment, if you are located behind a HTTP(S) proxy:
-#  if Vagrant.has_plugin?("vagrant-proxyconf")
-#    config.proxy.http     = "http://proxy.example.com:8080/"
-#    config.proxy.https    = "http://proxy.example.com:8080/"
-#    config.proxy.no_proxy = "localhost,127.0.0.1,.example.com"
-#  end
+  if Vagrant.has_plugin?("vagrant-proxyconf") # && enable_proxy
+    config.proxy.http     = HTTP_PROXY
+    config.proxy.https    = HTTPS_PROXY
+    config.proxy.no_proxy = NO_PROXY
+  end
 
   # make sure the ssh agent is started, using the insecure private key 
   # note: for now, the private key is assumed to be uploaded
@@ -69,6 +86,7 @@ Vagrant.configure("2") do |config|
       config.vm.box_version = $image_version
   end
   config.vm.box_url = "http://%s.release.core-os.net/amd64-usr/%s/coreos_production_vagrant.json" % [$update_channel, $image_version]
+#abort config.vm.box_url
 
   ["vmware_fusion", "vmware_workstation"].each do |vmware|
     config.vm.provider vmware do |v, override|

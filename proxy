@@ -1,0 +1,47 @@
+#!/bin/bash
+
+echo "please run as . proxy [<ip> [<port>]]"
+
+setproxy ()
+{
+  if [ $# != 1 ];
+  then
+    echo "usage: setproxy <proxy>"
+  else
+    export http_proxy=$__proxy && echo "http_proxy set to $__proxy"
+    export https_proxy=$__proxy && echo "https_proxy set to $__proxy"
+  fi
+}
+
+clearproxy()
+{
+  if [ $# != 0 ];
+  then
+    echo "usage: clearproxy"
+  else
+    unset http_proxy && echo "http_proxy cleared"
+    unset https_proxy && echo "https_proxy cleared"
+  fi
+}
+
+testReachability()
+{
+  if [ $# != 1 ];
+  then
+    echo "usage: testReachability <ip>"
+  else
+    which ping | grep Windows && ping -n 1 -w 3 $1 || ping -c 1 -w 3 $__ip | grep '1 received'
+  fi
+}
+
+detectAndSetProxy()
+{
+  [ _$1 != _ ] && __ip=$1 || __ip=172.28.12.5
+  [ _$2 != _ ] && __port=$2 || __port=8080
+  __proxy=http://${__ip}:${__port}
+
+  testReachability $__ip && setproxy $__proxy || clearproxy
+}
+
+detectAndSetProxy $1 $2
+unset detectAndSetProxy setproxy clearproxy __ip __port __proxy __success
