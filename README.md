@@ -122,3 +122,19 @@ Follow the [Enable Remote API instructions][coreos-enabling-port-forwarding] to 
 Then you can then use the `docker` command from your local shell by setting `DOCKER_HOST`:
 
     export DOCKER_HOST=tcp://localhost:2375
+
+## Proxy Configuration
+
+This installation allows to set the HTTP Proxy dynamically by setting
+HTTP_PROXY=...
+HTTPS_PROXY=...
+before creating the VM with 'vagrant up'
+
+However, this will only set the variables HTTP_PROXY and HTTPS_PROXY on the shell, but there are following drawbacks:
+* it does not start the docker process with the correct proxy configured. 
+  For changing the proxy configuration for CoreOS systems, please read the CoreOS section of 
+  https://oliverveits.wordpress.com/2016/10/24/docker-http-proxy-and-dns-configuration-cheat-sheet/
+* it does not check, whether the proxy is reachable. To detect the reachability of a proxy before setting
+  the proxy, check 
+  https://oliverveits.wordpress.com/2016/10/24/docker-http-proxy-and-dns-configuration-cheat-sheet/
+  (However, like the vagrant proxy, this is not supported for CoreOS docker settings yet; only for setting HTTP_PROXY in the shell)
